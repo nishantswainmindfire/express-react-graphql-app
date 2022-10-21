@@ -18,9 +18,12 @@ const RootQuery = new GraphQLObjectType({
         getAllUsers: {
             type: new GraphQLList(UserType),
             args: { id: { type: GraphQLInt } },
-            resolve(parent, args) {
-              
-                return "userData";
+            resolve(parent, args,context) {
+              console.log(args,)
+            //   console.log(context))
+            const domain = context.headers.host.split(".")[1]
+            console.log("Inside getAllUsers resolver",domain)   
+            return "userData";
             },
         },
         getAllPosts:{

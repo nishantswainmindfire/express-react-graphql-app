@@ -16,7 +16,9 @@ app.use(express.static("build"))
 //graphql
 app.use('/graphql', graphqlHTTP({
     schema,
-    graphiql: true
+    graphiql: true,
+    // context: { startTime: Date.now() },
+
 }))
 app.get('/', (req, res) => {
     res.send("hello w")
