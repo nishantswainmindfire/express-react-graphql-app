@@ -9,29 +9,36 @@ const {
     GraphQLList,
 } = graphql;
 // const userData = require("../MOCK_DATA.json");
+const connectionObjects = require('../db-models')
 
-
-
+const getDomain = (context) => {
+    const { headers } = context
+    const domain = headers.host.split(".")[1]
+    return domain
+}
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
-        getAllUsers: {
+        getAllAuthors: {
             type: new GraphQLList(UserType),
             args: { id: { type: GraphQLInt } },
-            resolve(parent, args,context) {
-              console.log(args,)
-            //   console.log(context))
-            const domain = context.headers.host.split(".")[1]
-            console.log("Inside getAllUsers resolver",domain)   
-            return "userData";
+            resolve(parent, args, context) {
+                const domain = getDomain(context)
+                console.log("Inside getAllUsers resolver", domain)
+                return "userData";
             },
         },
-        getAllPosts:{
-            type:new GraphQLList(PostType),
+        getAllPosts: {
+            type: new GraphQLList(PostType),
             args: { post_id: { type: GraphQLInt } },
             resolve(parent, args) {
                 return "postsData";
             },
+        },
+        getPost: {
+            type: PostType,
+            args: { post_id: { type: GraphQLInt } },
+            resolve(parent, args, context) { }
         }
     },
 });
@@ -39,22 +46,17 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: "Mutation",
     fields: {
-        createUser: {
-            type: UserType,
+        createPost: {
+            type: PostType,
             args: {
-                firstName: { type: GraphQLString },
-                lastName: { type: GraphQLString },
-                email: { type: GraphQLString },
-                password: { type: GraphQLString },
+                title: { type: GraphQLString },
+                description: { type: GraphQLString },
+                rating: { type: GraphQLInt },
+
             },
-            resolve(parent, args) {
-                userData.push({
-                    id: userData.length + 1,
-                    firstName: args.firstName,
-                    lastName: args.lastName,
-                    email: args.email,
-                    password: args.password,
-                });
+            resolve(parent, args, context) {
+                const domain = getDomain(context)
+                console.log("domain is", domain)
                 return args;
             },
         },
