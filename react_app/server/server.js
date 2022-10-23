@@ -15,16 +15,26 @@ app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 app.use(express.static("build"))
 
 //graphql
+const extensions = ({
+    document,
+    variables,
+    operationName,
+    result,
+    context,
+  }) => {
+    return {
+    //   runTime: Date.now() - context.startTime,
+      host:context.rawHeaders[1],
+    //   operationName,
+    };
+  };
 app.use('/graphql', graphqlHTTP({
     schema,
     graphiql: true,
+    extensions
     // context: { startTime: Date.now() },
 
 }))
-app.get('/x', (req, res) => {
-    console.log("=================connectionObjects=========================",connectionObjects)
-    res.send("hello w")
-})
 
 
 const domain1 = {

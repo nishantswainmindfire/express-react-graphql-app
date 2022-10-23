@@ -27,10 +27,10 @@ for (let domain in dbConfig) {
             db.Sequelize = Sequelize
             db.sequelize = sequelize
             connectionObjects[domain] = db
-            db.posts = require('./PostsModel')(sequelize, DataTypes)
-            // db.author = require('./productModel.js')(sequelize, DataTypes)
+            db.posts = require('./models/PostsModel')(sequelize, DataTypes)
+            db.author = require('./models/AuthorModel')(sequelize, DataTypes)
             //not to recreate tables again and again keep force as false
-            db.sequelize.sync({ force: true }).then(() => console.log("Yes resync done!"))
+            db.sequelize.sync({ force: false }).then(() => console.log("Yes resync done!"))
             connectionObjects[domain] = db
         }).
         catch((err) => console.error(`Error connecting to ${config.db} `, err))
