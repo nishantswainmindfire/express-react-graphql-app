@@ -16,71 +16,43 @@ import {
   from
 } from '@apollo/client';
 import { ErrorLink, onError } from '@apollo/client/link/error'
-
+import PostList from './components/PostList';
 
 const errorLink = onError(({ graphqlErrors, networkError }) => {
-  console.log("network error ", networkError)
+
   if (graphqlErrors) {
     graphqlErrors.map(({ message, location, path }) => {
       alert(`Graphql error ${message}`)
     })
   }
+  if (networkError) {
+    console.log("=========network error======== ", networkError)
+  }
 })
-
+// const host=window.location.host
+const host = `www.domain2.com:8080`
 const link = from([
   errorLink,
-  new HttpLink({ uri: "http://localhost:8080/graphql" })
+  new HttpLink({ uri: `http://${window.location.host}/graphql` })
 ])
 const client = new ApolloClient({
-  cache: {},
+  cache: new InMemoryCache(),
   link: link
 })
 function App() {
-  const [siteState, setSiteState] = useState({})
 
-  useEffect(() => {
-
-    fetch("/api/items").
-      then(res => res.json()).
-      then(data => setSiteState(data))
-
-  }, [])
-  function renderState() {
-    if (siteState)
-      return JSON.stringify(siteState)
-  }
   return (
     <ApolloProvider client={client}>
-      <div className="App">
-        Hello World
-        <Button>Material Button</Button>
-        {/* {renderState()} */}
-        <Card sx={{ maxWidth: 345 }}>
-          <CardMedia
-            component="img"
-            height="140"
-            image={siteState.image ? siteState.image : "https://images8.alphacoders.com/127/1274206.jpg"}
-            alt="green iguana"
-          />
+      <div className='heading'>
 
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="div">
-              Black Adam
-
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              King of kandak
-              {renderState()}
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Share</Button>
-            <Button size="small">Learn More</Button>
-          </CardActions>
-        </Card>
+        <h2>Host is, {window.location.host.split(":")[0]}</h2>
+      </div>
+      <div className="app">
+        <PostList />
       </div>
     </ApolloProvider>
   );
 }
 
 export default App;
+

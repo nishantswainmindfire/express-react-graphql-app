@@ -13,6 +13,9 @@ const connectionObjects = require('../db-models')
 
 const getDomain = (context) => {
     const { headers } = context
+    const isLocalhost = headers.host.includes("localhost")
+    if (isLocalhost)
+        return "domain1"
     const domain = headers.host.split(".")[1]
     return domain
 }
@@ -35,14 +38,14 @@ const getAllPosts = async (domain) => {
             "rating"
         ]
     })
-    console.log("==============all posts=====",posts)
+    console.log("==============all posts=====", posts)
     return posts
 }
 
-const getOnePost=async(whereCondition,domain)=>{
+const getOnePost = async (whereCondition, domain) => {
     const db = connectionObjects[domain]
     const Post = db.posts
-    const post = Post.findOne({where:whereCondition})
+    const post = Post.findOne({ where: whereCondition })
     return post
 }
 const RootQuery = new GraphQLObjectType({
@@ -59,7 +62,7 @@ const RootQuery = new GraphQLObjectType({
         },
         getAllPosts: {
             type: new GraphQLList(PostType),
-            args: { 
+            args: {
                 // post_id: { type: GraphQLInt } 
             },
             resolve(parent, args, context) {
@@ -72,10 +75,10 @@ const RootQuery = new GraphQLObjectType({
             args: { id: { type: GraphQLInt } },
             resolve(parent, args, context) {
 
-                const domain=getDomain(context)
-                const where={...args}
-                return getOnePost(where,domain)
-             }
+                const domain = getDomain(context)
+                const where = { ...args }
+                return getOnePost(where, domain)
+            }
         }
     },
 });
