@@ -13,10 +13,12 @@ import {
   InMemoryCache,
   ApolloProvider,
   HttpLink,
-  from
+  from,
+  useMutation
 } from '@apollo/client';
 import { ErrorLink, onError } from '@apollo/client/link/error'
 import PostList from './components/PostList';
+import { CREATE_NEW_POST } from './GraphQL/Mutations/PostMutations';
 
 const errorLink = onError(({ graphqlErrors, networkError }) => {
 
@@ -40,7 +42,17 @@ const client = new ApolloClient({
   link: link
 })
 function App() {
+  // const [createPost, { error }] = useMutation(CREATE_NEW_POST)
 
+  // const addPost = () => {
+  //   createPost({
+  //     variables: {
+  //       title: "title",
+  //       description: "description",
+  //       rating: "rating"
+  //     }
+  //   })
+  // }
   return (
     <ApolloProvider client={client}>
       <div className='heading'>

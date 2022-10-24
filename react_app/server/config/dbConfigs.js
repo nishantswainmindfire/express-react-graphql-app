@@ -1,3 +1,4 @@
+//store this info as a secret
 module.exports = {
     "domain1": {
         HOST: "localhost",

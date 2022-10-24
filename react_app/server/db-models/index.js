@@ -29,7 +29,7 @@ for (let domain in dbConfig) {
             connectionObjects[domain] = db
             db.posts = require('./models/PostsModel')(sequelize, DataTypes)
             db.author = require('./models/AuthorModel')(sequelize, DataTypes)
-            //not to recreate tables again and again keep force as false
+            //if u dont wantto  recreate tables again and again keep force as false
             db.sequelize.sync({ force: false }).then(() => console.log("Yes resync done!"))
             connectionObjects[domain] = db
         }).
