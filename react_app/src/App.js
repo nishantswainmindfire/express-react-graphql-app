@@ -20,27 +20,6 @@ import { ErrorLink, onError } from '@apollo/client/link/error'
 import PostList from './components/PostList';
 import { CREATE_NEW_POST } from './GraphQL/Mutations/PostMutations';
 
-const errorLink = onError(({ graphqlErrors, networkError }) => {
-
-  if (graphqlErrors) {
-    graphqlErrors.map(({ message, location, path }) => {
-      alert(`Graphql error ${message}`)
-    })
-  }
-  if (networkError) {
-    console.log("=========network error======== ", networkError)
-  }
-})
-// const host=window.location.host
-const host = `www.domain2.com:8080`
-const link = from([
-  errorLink,
-  new HttpLink({ uri: `http://${window.location.host}/graphql` })
-])
-const client = new ApolloClient({
-  cache: new InMemoryCache(),
-  link: link
-})
 function App() {
   // const [createPost, { error }] = useMutation(CREATE_NEW_POST)
 
@@ -53,6 +32,31 @@ function App() {
   //     }
   //   })
   // }
+
+
+
+  const errorLink = onError(({ graphqlErrors, networkError }) => {
+
+    if (graphqlErrors) {
+      graphqlErrors.map(({ message, location, path }) => {
+        alert(`Graphql error ${message}`)
+      })
+    }
+    if (networkError) {
+      console.log("=========network error======== ", networkError)
+    }
+  })
+  const hostName=window.location.hostname
+
+  // const host = `www.domain2.com:8080`
+  const link = from([
+    errorLink,
+    new HttpLink({ uri: `http://${hostName}:8080/graphql` })
+  ])
+  const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    link: link
+  })
   return (
     <ApolloProvider client={client}>
       <div className='heading'>

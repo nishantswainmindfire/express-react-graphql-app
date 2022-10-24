@@ -38,7 +38,7 @@ const getAllPosts = async (domain) => {
             "rating"
         ]
     })
-    console.log("==============all posts=====", posts)
+    // console.log("==============all posts=====", posts)
     return posts
 }
 

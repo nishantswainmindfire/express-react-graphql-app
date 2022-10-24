@@ -4,10 +4,15 @@ const { graphqlHTTP } = require("express-graphql")
 const schema = require('./Schemas')
 const cors = require('cors')
 const PORT = process.env.PORT || 8080;
-
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+
+app.use(cors())
+
+app.use("*",(req,res,next)=>{
+  next()
+})
 
 //serving react static files
 app.use(express.static("build"))
@@ -29,7 +34,6 @@ app.use('/graphql', cors(), graphqlHTTP({
   graphiql: true,
   extensions
   // context: { startTime: Date.now() },
-
 }))
 
 
