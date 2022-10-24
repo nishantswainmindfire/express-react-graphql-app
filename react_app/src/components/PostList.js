@@ -3,15 +3,14 @@ import PostItem from './PostItem'
 import { useQuery, gql } from '@apollo/client'
 import { LOAD_POSTS } from '../GraphQL/Queries/PostQueries'
 function PostList() {
-    const { loading, error, data, extensions } = useQuery(LOAD_POSTS)
-    // console.log(data)
+    const { loading, error, data, extensions ,refetch} = useQuery(LOAD_POSTS)
+    const p = useQuery(LOAD_POSTS)
     const [posts, setPosts] = useState([])
     const [host, setHost] = useState([])
+    // console.log("&&&&&&&&",p,refetch.toString())
     useEffect(() => {
         if (data) {
             setPosts(data.getAllPosts)
-
-            // setHost(extensions.host)
         }
         if (extensions) {
             console.log("dd", extensions)
