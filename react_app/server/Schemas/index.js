@@ -57,7 +57,7 @@ const getAllPosts = async (domain) => {
 }
 
 const getOnePost = async (whereCondition, domain) => {
-    const db = connectionObjects[domain]
+    const db =await getConnectionObject(domain)
     const Post = db.posts
     const post = Post.findOne({ where: whereCondition })
     return post
