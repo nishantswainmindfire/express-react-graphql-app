@@ -24,7 +24,7 @@ function PostList() {
                 return <div className='post-item' key={post.id}><PostItem  {...post} /></div>
             })
         else
-            return "null"
+            return "Loading Posts..."
     }
     return (
         <>     

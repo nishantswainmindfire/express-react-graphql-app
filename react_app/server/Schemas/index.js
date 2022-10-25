@@ -11,6 +11,10 @@ const {
 // const userData = require("../MOCK_DATA.json");
 const connectionObjects = require('../db-models')
 
+function sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
+
 const getDomain = (context) => {
     const { headers } = context
     const isLocalhost = headers.host.includes("localhost")
@@ -27,7 +31,15 @@ const createNewPost = async (requestData, domain) => {
     return post
 }
 
+const updatePost = async (requestData, id, domain) => {
+    const db = connectionObjects[domain]
+    const Post = db.posts
+    const post = await Post.update(requestData, { where: { id } })
+    return post
+}
+
 const getAllPosts = async (domain) => {
+    await sleep(2000)
     const db = connectionObjects[domain]
     const Post = db.posts
     const posts = await Post.findAll({
@@ -97,6 +109,20 @@ const Mutation = new GraphQLObjectType({
             resolve(parent, args, context) {
                 const domain = getDomain(context)
                 return createNewPost(args, domain)
+            },
+        },
+        updatePost: {
+            type: PostType,
+            args: {
+                id: { type: GraphQLInt },
+                title: { type: GraphQLString },
+                description: { type: GraphQLString },
+                rating: { type: GraphQLInt },
+
+            },
+            resolve(parent, args, context) {
+                const domain = getDomain(context)
+                return updatePost(args, domain)
             },
         },
     },

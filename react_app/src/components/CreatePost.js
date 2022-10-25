@@ -6,20 +6,26 @@ import { CREATE_NEW_POST } from '../GraphQL/Mutations/PostMutations';
 function CreatePost() {
     const [createPost, { error }] = useMutation(CREATE_NEW_POST)
 
-    const addPost = () => {
-        createPost({
-            variables: {
-                title: creatPostState.title,
-                description: creatPostState.description,
-                rating: 4
-            }
-        })
-    }
+
 
     const [creatPostState, setCreatePostState] = useState({
         title: "", description: ""
     })
 
+    const addPost = () => {
+        const { title, description } = creatPostState
+        if (title.length > 0 && description.length > 0)
+            createPost({
+                variables: {
+                    title: title,
+                    description: description,
+                    rating: 4
+                }
+            })
+            else{
+                window.alert("Title and Description cannot be Empty!!")
+            }
+    }
     return (
 
         <div className='create-post'>

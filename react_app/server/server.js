@@ -7,17 +7,19 @@ const PORT = process.env.PORT || 8080;
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
+const path = require('path')
+const buildPath = path.normalize(path.join(__dirname, '../build'));
 
+
+
+console.log("==========build paths is ============",buildPath)
 app.use(cors())
 
-app.use("*",(req,res,next)=>{
-  next()
-})
 
-//serving react static files
-app.use(express.static("build"))
+app.use(express.static(buildPath))
 
-//graphql integration
+
+  //graphql integration
 const extensions = ({
   document,
   variables,
@@ -29,12 +31,33 @@ const extensions = ({
     host: context.rawHeaders[1],
   };
 };
+
 app.use('/graphql', cors(), graphqlHTTP({
   schema,
   graphiql: true,
   extensions
   // context: { startTime: Date.now() },
 }))
+
+app.use(express.static(buildPath))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //other rest api's integration
@@ -63,3 +86,16 @@ app.use('/graphql', cors(), graphqlHTTP({
 //     res.send(domain2)
 // })
 
+// app.use("*",(req,res,next)=>{
+//   async function fun() {  
+//     // document.write('Hello World');  
+//     for (let i = 1; i <=10 ; i++) {          
+//        await sleep(20000);  
+//       //  document.write( i + " " + "Welcome to the javaTpoint.com" + " " + "</br>");  
+//     }  
+//  }  
+//  fun();  
+//   next()
+// })
+// app.use('/static', express.static("build"))
+//serving react static files
