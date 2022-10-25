@@ -17,9 +17,11 @@ function sleep(milliseconds) {
 
 const getDomain = (context) => {
     const { headers } = context
+    // for localhost testing
     const isLocalhost = headers.host.includes("localhost")
     if (isLocalhost)
         return "domain1"
+        
     const domain = headers.host.split(".")[1]
     return domain
 }
