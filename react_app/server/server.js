@@ -19,7 +19,7 @@ app.use(cors())
 app.use(express.static(buildPath))
 
 
-  //graphql integration
+//graphql integration
 const extensions = ({
   document,
   variables,
@@ -36,7 +36,6 @@ app.use('/graphql', cors(), graphqlHTTP({
   schema,
   graphiql: true,
   extensions
-  // context: { startTime: Date.now() },
 }))
 
 app.use(express.static(buildPath))
