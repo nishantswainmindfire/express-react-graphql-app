@@ -27,14 +27,14 @@ const getDomain = (context) => {
 }
 
 const createNewPost = async (requestData, domain) => {
-    const db = connectionObjects[domain]
+    const db =await getConnectionObject(domain)
     const Post = db.posts
     const post = await Post.create(requestData)
     return post
 }
 
 const updatePost = async (requestData, id, domain) => {
-    const db = connectionObjects[domain]
+    const db =await getConnectionObject(domain)
     const Post = db.posts
     const post = await Post.update(requestData, { where: { id } })
     return post
@@ -62,6 +62,7 @@ const getOnePost = async (whereCondition, domain) => {
     const post = Post.findOne({ where: whereCondition })
     return post
 }
+
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
     fields: {
@@ -78,7 +79,7 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(PostType),
             args: {},
             async resolve(parent, args, context) {
-                await sleep(2000)
+                await sleep(5000)
                 const domain = getDomain(context)
                 return getAllPosts(domain)
             },
