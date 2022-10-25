@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const Author = sequelize.define("author", {
-        userId: {
+        authorId: {
             type: DataTypes.STRING,
             allowedNull: false
         },
@@ -8,14 +8,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowedNull: false
         },
-        password: {
-            type: DataTypes.STRING,
-            allowedNull: false
-        },
-        posts:{
-            type:DataTypes.JSON,
-            allowedNull:true
-        }
+        // password: {
+        //     type: DataTypes.STRING,
+        //     allowedNull: false
+        // },
+        // posts:{
+        //     type:DataTypes.JSON,
+        //     allowedNull:true
+        // }
     })
 return Author
 }

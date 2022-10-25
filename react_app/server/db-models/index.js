@@ -29,11 +29,23 @@ for (let domain in dbConfig) {
             // connectionObjects[domain] = db
             db.posts = require('./models/PostsModel')(sequelize, DataTypes)
             db.author = require('./models/AuthorModel')(sequelize, DataTypes)
+
+            //one to many relation
+            db.author.hasMany(db.posts, {
+                foreignKey: 'author_id',
+                as: 'post'
+            })
+            
+            db.posts.belongsTo(db.author, {
+                foreignKey: 'author_id',
+                as: 'author'
+            })
+            
             //if u dont wantto  recreate tables again and again keep force as false
-            // db.sequelize.sync({ 
-            //     force: false,
-            // alter:true
-            // }).then(() => console.log("Yes resync done!"))
+            db.sequelize.sync({ 
+                force: false,
+            alter:true
+            }).then(() => console.log("Yes resync done!"))
             connectionObjects[domain] = db
         }).
         catch((err) => console.error(`Error connecting to ${config.db} `, err))
