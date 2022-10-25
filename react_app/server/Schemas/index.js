@@ -8,8 +8,8 @@ const {
     GraphQLString,
     GraphQLList,
 } = graphql;
-// const userData = require("../MOCK_DATA.json");
-const connectionObjects = require('../db-models')
+
+const {getConnectionObject}= require('../db-models')
 
 function sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds));
@@ -39,8 +39,8 @@ const updatePost = async (requestData, id, domain) => {
 }
 
 const getAllPosts = async (domain) => {
-    await sleep(2000)
-    const db = connectionObjects[domain]
+
+    const db =await getConnectionObject(domain)
     const Post = db.posts
     const posts = await Post.findAll({
         attributes: [
@@ -74,10 +74,9 @@ const RootQuery = new GraphQLObjectType({
         },
         getAllPosts: {
             type: new GraphQLList(PostType),
-            args: {
-                // post_id: { type: GraphQLInt } 
-            },
-            resolve(parent, args, context) {
+            args: {},
+            async resolve(parent, args, context) {
+                await sleep(2000)
                 const domain = getDomain(context)
                 return getAllPosts(domain)
             },
