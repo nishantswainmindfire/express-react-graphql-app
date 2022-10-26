@@ -1,0 +1,4 @@
+{
+    "query": "\n\nquery {\ngetPost(id:1){\nid\n}}",
+    "variables": null
+}
