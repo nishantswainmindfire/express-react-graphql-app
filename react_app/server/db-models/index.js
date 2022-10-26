@@ -4,6 +4,14 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 let connectionObjects = {}
 
+// let objects={
+//     "domain1":new Sequelize(),
+//     "domain1":new Sequelize(),
+//     "domain1":new Sequelize(),
+//     "domain1":new Sequelize(),
+ 
+// }
+
 async function createConnectionObject(domain) {
     try {
         let config = dbConfig[domain]
@@ -17,7 +25,8 @@ async function createConnectionObject(domain) {
                 min: config.pool.min,
                 acquire: config.pool.acquire,
                 idle: config.pool.idle
-            }
+            },
+            logging:false
         })
         const db = {}
 

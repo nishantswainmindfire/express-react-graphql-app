@@ -8,6 +8,7 @@ const PostType = new GraphQLObjectType({
         title: { type: GraphQLString },
         description: { type: GraphQLString },
         rating: { type: GraphQLInt },
+        date:{type:GraphQLString}
     }),
 });
 

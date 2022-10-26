@@ -4,11 +4,16 @@ const { graphqlHTTP, } = require("express-graphql")
 const schema = require('./Schemas')
 const cors = require('cors')
 const PORT = process.env.PORT || 8080;
+
+
+
+// logger.l
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 
 const path = require('path')
+
 const buildPath = path.normalize(path.join(__dirname, '../build'));
 app.use(cors())
 app.use(express.static(buildPath))
@@ -23,8 +28,10 @@ const extensions = ({
 }) => {
   return {
     host: context.rawHeaders[1],
+    Date:new Date().toString()
   };
 };
+
 app.use('/graphql', cors(), graphqlHTTP({
   schema,
   graphiql: true,
@@ -34,7 +41,13 @@ app.use('/graphql', cors(), graphqlHTTP({
 app.use(express.static(buildPath))
 
 
+app.get("/api/test", (req, res) => {
 
+  // /
+  console.log("hi form ab")
+  res.send("hello")
+
+})
 
 
 
