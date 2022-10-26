@@ -4,14 +4,6 @@ const { Sequelize, DataTypes } = require('sequelize')
 
 let connectionObjects = {}
 
-// let objects={
-//     "domain1":new Sequelize(),
-//     "domain1":new Sequelize(),
-//     "domain1":new Sequelize(),
-//     "domain1":new Sequelize(),
- 
-// }
-
 async function createConnectionObject(domain) {
     try {
         let config = dbConfig[domain]
@@ -26,7 +18,7 @@ async function createConnectionObject(domain) {
                 acquire: config.pool.acquire,
                 idle: config.pool.idle
             },
-            logging:false
+            logging: false
         })
         const db = {}
 
@@ -53,15 +45,12 @@ async function createConnectionObject(domain) {
         await db.sequelize.sync({ force: false, alter: true })
         console.log("Yes resync done!")
         connectionObjects[domain] = db
-        console.log("returning connection")
         return db
 
     }
     catch (err) {
         console.error(`Error connecting to ${config.db} `, err)
     }
-
-
 
 }
 
