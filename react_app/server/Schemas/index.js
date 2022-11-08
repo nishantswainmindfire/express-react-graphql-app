@@ -9,63 +9,9 @@ const {
     GraphQLList,
 } = graphql;
 
-const { getConnectionObject } = require('../db-models');
+
 const { logger } = require("../winston-customLogging.js");
-
-function sleep(milliseconds) {
-    return new Promise(resolve => setTimeout(resolve, milliseconds));
-}
-
-const getDomain = (context) => {
-    const { headers } = context
-    // for localhost testing
-    const isLocalhost = headers.host.includes("localhost")
-    if (isLocalhost)
-        return "domain1"
-
-    const domain = headers.host.split(".")[1]
-    return domain
-}
-
-const createNewPost = async (requestData, domain) => {
-    const db = await getConnectionObject(domain)
-    const Post = db.posts
-    const post = await Post.create(requestData)
-    return post
-}
-
-const updatePost = async (requestData, id, domain) => {
-    const db = await getConnectionObject(domain)
-    const Post = db.posts
-    const post = await Post.update(requestData, { where: { id } })
-    return post
-}
-
-const getAllPosts = async (domain) => {
-    const timeStamp = new Date().toString()
-    const db = await getConnectionObject(domain)
-    const Post = db.posts
-    const posts = await Post.findAll({
-        attributes: [
-            "id",
-            "title",
-            "description",
-            "rating"
-        ]
-    })
-    posts.forEach(element => {
-        element.date = timeStamp
-    });
-    // console.log("==============all posts=====", posts)
-    return posts
-}
-
-const getOnePost = async (whereCondition, domain) => {
-    const db = await getConnectionObject(domain)
-    const Post = db.posts
-    const post = Post.findOne({ where: whereCondition })
-    return post
-}
+const { updatePost, createNewPost, sleep, getOnePost, getDomain, getAllPosts, createJWT } = require("./utils");
 
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
@@ -85,11 +31,8 @@ const RootQuery = new GraphQLObjectType({
             async resolve(parent, args, context) {
 
                 const domain = getDomain(context)
-                // console.log("=================DOMAIN===========", domain)
                 let allPosts = getAllPosts(domain)
-                // console.log("===========wait for 5 seconds========")
                 await sleep(5000)
-                // console.log("=====Posts data=====", allPosts)
                 return allPosts
 
             },
@@ -98,7 +41,6 @@ const RootQuery = new GraphQLObjectType({
             type: PostType,
             args: { id: { type: GraphQLInt } },
             async resolve(parent, args, context) {
-
                 const domain = getDomain(context)
                 logger.log({ level: "info", message: `=======Domain is============ ${domain}` })
 
@@ -127,6 +69,20 @@ const RootQuery = new GraphQLObjectType({
 const Mutation = new GraphQLObjectType({
     name: "Mutation",
     fields: {
+        signInUser: {
+            type: UserType,
+            args: {
+                userName: { type: GraphQLString },
+                password: { type: GraphQLString },
+            },
+            resolve(parent, args, context) {
+                const { userName, password } = args
+                const domain=getDomain(context)
+                const token = createJWT({ userName, password },domain)
+                // console.log("token is ", token)
+                return{id:1234,userName,token}
+            }
+        },
         createNewPost: {
             type: PostType,
             args: {

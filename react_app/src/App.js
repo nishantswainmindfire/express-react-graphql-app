@@ -1,18 +1,25 @@
 
 import './App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
   HttpLink,
-  from, 
+  from,
+  useMutation,
 } from '@apollo/client';
 import { ErrorLink, onError } from '@apollo/client/link/error'
 import PostList from './components/PostList';
 import CreatePost from './components/CreatePost';
-
+import { Button, TextField } from '@mui/material';
+import { SIGN_IN_USER } from './GraphQL/Mutations/UserMutations';
+import LoginForm from './components/LoginForm';
+// import { useMutation } from '@apollo/client';
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+ 
+
   const errorLink = onError(({ graphqlErrors, networkError }) => {
     if (graphqlErrors) {
       graphqlErrors.map(({ message, location, path }) => {
@@ -24,7 +31,7 @@ function App() {
     }
   })
   const hostName = window.location.hostname
-   // const host = `www.domain2.com:8080`
+  // const host = `www.domain2.com:8080`
   const link = from([
     errorLink,
     new HttpLink({ uri: `http://${hostName}:8080/graphql` })
@@ -36,13 +43,14 @@ function App() {
 
   return (
     <ApolloProvider client={client}>
-      <div className='heading'>
+      {!isLoggedIn && <LoginForm setIsLoggedIn={setIsLoggedIn}/>}
+      {isLoggedIn && (<><div className='heading'>
         <h2>Host is, {window.location.host.split(":")[0]}</h2>
       </div>
-      <div className="app">
-        <CreatePost />
-        <PostList />
-      </div>
+        <div className="app">
+          <CreatePost />
+          <PostList />
+        </div></>)}
     </ApolloProvider>
   );
 }

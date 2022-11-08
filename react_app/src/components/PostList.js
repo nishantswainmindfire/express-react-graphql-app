@@ -3,7 +3,9 @@ import PostItem from './PostItem'
 import { useQuery, gql } from '@apollo/client'
 import { LOAD_POSTS } from '../GraphQL/Queries/PostQueries'
 function PostList() {
-    const { loading, error, data, extensions ,refetch} = useQuery(LOAD_POSTS)
+    const { loading, error, data, extensions ,refetch,} = useQuery(LOAD_POSTS)
+    const res = useQuery(LOAD_POSTS)
+    // console.log("**",res)
     const p = useQuery(LOAD_POSTS)
     const [posts, setPosts] = useState([])
     const [host, setHost] = useState([])

@@ -40,3 +40,14 @@ h2 {
   gap:1rem;
   width: 25rem  ;
 }
+.login-form{
+  /* border: 1px solid salmon ; */
+  margin: 0 auto;
+  padding: 10em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap:1rem;
+  width: 25rem  ;
+}

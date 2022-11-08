@@ -1,4 +1,5 @@
 //store this info as a secret
+//add timeout for connection objects
 module.exports = {
     "domain1": {
         HOST: "localhost",

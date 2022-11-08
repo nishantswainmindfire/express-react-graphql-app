@@ -5,19 +5,18 @@ const schema = require('./Schemas')
 const cors = require('cors')
 const PORT = process.env.PORT || 8080;
 
-
-
-// logger.l
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 
 const path = require('path')
+const { dbURL, name, domain1Secret, domain2Secret } = require("./config/env-config")
 
 const buildPath = path.normalize(path.join(__dirname, '../build'));
 app.use(cors())
 app.use(express.static(buildPath))
-
+console.log("domain1 secret ", domain1Secret)
+console.log("domain2 secret ", domain2Secret)
 //graphql integration
 const extensions = ({
   document,
@@ -28,26 +27,60 @@ const extensions = ({
 }) => {
   return {
     host: context.rawHeaders[1],
-    Date:new Date().toString()
+    Date: new Date().toString()
   };
 };
 
-app.use('/graphql', cors(), graphqlHTTP({
-  schema,
-  graphiql: true,
-  extensions
-}))
+//create mutations for sign-in
+// token generate
+// send response and query token field from UserModel
+
+//and to call other graphql queries use Headers and add jwt-token to the header 
+//add authentication middleware ..
+//throw error "session expired" in middleware  if inavild token and domain does not match token-domain
+//else forward the request to grapghql
+
+//domain1-token
+
+//domain2-tokenA
+function authMiddleware(req, res, next) {
+  res.json({data:"token missing"})
+  // throw new Error("auth error,token missing")
+}
+//mention 
+app.use('/graphql',
+  // cors(),
+// authMiddleware,
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+    extensions
+  }))
 
 app.use(express.static(buildPath))
 
 
-app.get("/api/test", (req, res) => {
 
-  // /
-  console.log("hi form ab")
-  res.send("hello")
 
-})
+
+
+
+
+
+
+
+
+
+
+
+
+
+// app.get("/api/test", (req, res) => {
+
+//   console.log("hi form ab")
+//   res.send("hello")
+
+// })
 
 
 
