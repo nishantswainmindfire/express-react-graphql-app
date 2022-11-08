@@ -1,6 +1,7 @@
 const express = require("express")
 const app = express()
 const { graphqlHTTP, } = require("express-graphql")
+const jsonwebtoken = require('jsonwebtoken')
 const schema = require('./Schemas')
 const cors = require('cors')
 const PORT = process.env.PORT || 8080;
@@ -10,7 +11,9 @@ app.use(express.urlencoded({ extended: true }))
 app.listen(PORT, () => console.log(`Server started on ${PORT}`));
 
 const path = require('path')
-const { dbURL, name, domain1Secret, domain2Secret } = require("./config/env-config")
+const { dbURL, name, domain1Secret, domain2Secret, jwt_secrets } = require("./config/env-config")
+const { verify } = require("crypto")
+const { authMiddleware } = require("./utils")
 
 const buildPath = path.normalize(path.join(__dirname, '../build'));
 app.use(cors())
@@ -31,26 +34,9 @@ const extensions = ({
   };
 };
 
-//create mutations for sign-in
-// token generate
-// send response and query token field from UserModel
-
-//and to call other graphql queries use Headers and add jwt-token to the header 
-//add authentication middleware ..
-//throw error "session expired" in middleware  if inavild token and domain does not match token-domain
-//else forward the request to grapghql
-
-//domain1-token
-
-//domain2-tokenA
-function authMiddleware(req, res, next) {
-  res.json({data:"token missing"})
-  // throw new Error("auth error,token missing")
-}
-//mention 
 app.use('/graphql',
   // cors(),
-// authMiddleware,
+  authMiddleware,
   graphqlHTTP({
     schema,
     graphiql: true,
@@ -61,6 +47,22 @@ app.use(express.static(buildPath))
 
 
 
+//create mutations for sign-in
+// token generate
+// send response and query token field from UserModel
+
+//and to call other graphql queries use Headers and add jwt-token to the header
+//add authentication middleware ..
+//throw error "session expired" in middleware  if inavild token and domain does not match token-domain
+//else forward the request to grapghql
+
+//domain1-token
+
+//domain2-tokenA
+
+// throw new Error("auth error,token missing")
+
+//mention
 
 
 

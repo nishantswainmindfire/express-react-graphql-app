@@ -29,9 +29,10 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(PostType),
             args: {},
             async resolve(parent, args, context) {
-
-                const domain = getDomain(context)
-                let allPosts = getAllPosts(domain)
+                // console.log(Object.keys(context))
+                const { userData, domain_name } = context
+                // const domain = getDomain(context)
+                let allPosts = getAllPosts(domain_name)
                 await sleep(5000)
                 return allPosts
 
@@ -77,10 +78,10 @@ const Mutation = new GraphQLObjectType({
             },
             resolve(parent, args, context) {
                 const { userName, password } = args
-                const domain=getDomain(context)
-                const token = createJWT({ userName, password },domain)
+                const domain = getDomain(context)
+                const token = createJWT({ userName, password }, domain)
                 // console.log("token is ", token)
-                return{id:1234,userName,token}
+                return { id: 1234, userName, token }
             }
         },
         createNewPost: {
