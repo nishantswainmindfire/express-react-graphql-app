@@ -1,6 +1,6 @@
 
 import './App.css';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ApolloClient,
   InMemoryCache,
@@ -20,7 +20,11 @@ import LoginForm from './components/LoginForm';
 // import { useMutation } from '@apollo/client';
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
- 
+  useEffect(() => {
+    const mlt_token = localStorage.getItem('mlt-token')
+    if (mlt_token !== undefined && mlt_token !== "")
+      setIsLoggedIn(true)
+  }, [])
 
   const errorLink = onError(({ graphqlErrors, networkError }) => {
     if (graphqlErrors) {
@@ -47,20 +51,29 @@ function App() {
   });
   const link = from([
     errorLink,
-    new HttpLink({ uri: `http://${hostName}:8080/graphql`,headers:()=>{
-      return {authorization:`Bearer ${localStorage.getItem('mlt-token')}`}
-    } })
+    new HttpLink({
+      uri: `http://${hostName}:8080/graphql`, headers: () => {
+        return { authorization: `Bearer ${localStorage.getItem('mlt-token')}` }
+      }
+    })
   ])
   const client = new ApolloClient({
     cache: new InMemoryCache(),
     link: authLink.concat(link)
   })
 
+  const logoutHandler=()=>{
+    localStorage.setItem("mlt-token","")
+    setIsLoggedIn(false)
+  }
   return (
     <ApolloProvider client={client}>
-      {!isLoggedIn && <LoginForm setIsLoggedIn={setIsLoggedIn}/>}
+      {!isLoggedIn && <LoginForm setIsLoggedIn={setIsLoggedIn} />}
       {isLoggedIn && (<><div className='heading'>
         <h2>Host is, {window.location.host.split(":")[0]}</h2>
+        <div className='logout-button'>
+          <Button variant='contained' color='primary' onClick={logoutHandler}>Logout</Button>
+        </div>
       </div>
         <div className="app">
           <CreatePost />

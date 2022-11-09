@@ -31,7 +31,9 @@ h2 {
   margin: 0;
   padding: 0;
   top: 0;
-  color: white
+  color: white;
+  display:flex;
+  justify-content: space-around;
 }
 
 .create-post{
@@ -50,4 +52,7 @@ h2 {
   flex-direction: column;
   gap:1rem;
   width: 25rem  ;
+}
+.logout-button{
+padding: 2em; 
 }

@@ -31,7 +31,7 @@ const RootQuery = new GraphQLObjectType({
             async resolve(parent, args, context) {
                 // console.log(Object.keys(context))
                 const { userData, domain_name } = context
-                // const domain = getDomain(context)
+                const domain = getDomain(context)
                 let allPosts = getAllPosts(domain_name)
                 await sleep(5000)
                 return allPosts

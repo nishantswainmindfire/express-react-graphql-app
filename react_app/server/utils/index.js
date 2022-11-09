@@ -1,5 +1,17 @@
 const jsonwebtoken = require("jsonwebtoken");
 const { jwt_secrets } = require("../config/env-config");
+
+
+const getDomain = (context) => {
+    const { headers } = context
+    const isLocalhost = headers.host.includes("localhost")
+    if (isLocalhost)
+        return "domain1"
+
+    const domain = headers.host.split(".")[1]
+    return domain
+}
+
 const verifyJWT = async (token, domain) => {
     let userObj;
     try {
@@ -12,9 +24,7 @@ const verifyJWT = async (token, domain) => {
     return userObj;
 }
 async function authMiddleware(req, res, next) {
-    // res.json({data:"token missing"})
-    console.log(req.host)
-    const domain = req.host.split(".")[1]
+    const domain = getDomain(req)
     console.log(req.headers.authorization)
     if (req.headers.authorization === undefined)
         res.json({ data: "token no present" })
@@ -27,4 +37,4 @@ async function authMiddleware(req, res, next) {
     }
 }
 
-module.exports={authMiddleware}
+module.exports = { authMiddleware }
