@@ -25,6 +25,13 @@ const createNewPost = async (requestData, domain) => {
     return post
 }
 
+const createNewUser = async (requestData, domain) => {
+    const db = await getConnectionObject(domain)
+    const User = db.user
+    const user = await User.create(requestData)
+    return user
+}
+
 const updatePost = async (requestData, id, domain) => {
     const db = await getConnectionObject(domain)
     const Post = db.posts
@@ -53,15 +60,22 @@ const getAllPosts = async (domain) => {
 const getOnePost = async (whereCondition, domain) => {
     const db = await getConnectionObject(domain)
     const Post = db.posts
-    const post = Post.findOne({ where: whereCondition })
+    const post = await Post.findOne({ where: whereCondition })
     return post
 }
 
+const getUser = async (whereCondition, domain) => {
+    const db = await getConnectionObject(domain)
+    const User = db.user
+    const user = await User.findOne({ where: whereCondition })
+    return user
+}
 const createJWT = (userObj, domain) => {
     const secret = jwt_secrets[domain]
-    console.log("secret is", secret)
     return jsonwebtoken.sign(userObj, secret, { expiresIn: '365d' })
 }
+
+
 module.exports = {
     getDomain,
     sleep,
@@ -69,5 +83,7 @@ module.exports = {
     updatePost,
     getAllPosts,
     getOnePost,
-    createJWT
+    createJWT,
+    createNewUser,
+    getUser
 }

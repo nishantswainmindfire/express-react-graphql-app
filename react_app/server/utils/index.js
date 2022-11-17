@@ -18,19 +18,23 @@ const verifyJWT = async (token, domain) => {
         userObj = jsonwebtoken.verify(token, jwt_secrets[domain]);
     }
     catch (err) {
-        console.log("Error ", err)
+        // console.log("Error ", err)
         userObj = false;
     }
     return userObj;
 }
 async function authMiddleware(req, res, next) {
     const domain = getDomain(req)
-    console.log(req.headers.authorization)
+    //   return next()
+    // console.log(req.headers.authorization)
     if (req.headers.authorization === undefined)
-        res.json({ data: "token no present" })
+        res.json({ data: "token not present" })
     else {
-        userData = await verifyJWT(req.headers.authorization.split(" ")[1], domain)
-        console.log("userData is ", userData)
+
+        const token = req.headers.authorization.split(" ")[1]
+        console.log("========= token is =========\n", token,"\n")
+        userData = await verifyJWT(token, domain)
+        console.log("======= userData from token is =======\n", userData)
         req.userData = userData
         req.domain_name = domain
         next()

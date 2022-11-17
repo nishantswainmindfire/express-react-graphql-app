@@ -47,22 +47,6 @@ app.use(express.static(buildPath))
 
 
 
-//create mutations for sign-in
-// token generate
-// send response and query token field from UserModel
-
-//and to call other graphql queries use Headers and add jwt-token to the header
-//add authentication middleware ..
-//throw error "session expired" in middleware  if inavild token and domain does not match token-domain
-//else forward the request to grapghql
-
-//domain1-token
-
-//domain2-tokenA
-
-// throw new Error("auth error,token missing")
-
-//mention
 
 
 

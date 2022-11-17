@@ -30,6 +30,7 @@ async function createConnectionObject(domain) {
 
         db.posts = require('./models/PostsModel')(sequelize, DataTypes)
         db.author = require('./models/AuthorModel')(sequelize, DataTypes)
+        db.user = require('./models/UserModel')(sequelize, DataTypes)
 
         //one to many relation
         db.author.hasMany(db.posts, {

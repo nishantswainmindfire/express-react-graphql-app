@@ -11,7 +11,7 @@ const {
 
 
 const { logger } = require("../winston-customLogging.js");
-const { updatePost, createNewPost, sleep, getOnePost, getDomain, getAllPosts, createJWT } = require("./utils");
+const { updatePost, createNewPost, sleep, getOnePost, getDomain, getAllPosts, createJWT, createNewUser, getUser } = require("./utils");
 
 const RootQuery = new GraphQLObjectType({
     name: "RootQueryType",
@@ -29,10 +29,9 @@ const RootQuery = new GraphQLObjectType({
             type: new GraphQLList(PostType),
             args: {},
             async resolve(parent, args, context) {
-                // console.log(Object.keys(context))
                 const { userData, domain_name } = context
                 const domain = getDomain(context)
-                let allPosts = getAllPosts(domain_name)
+                let allPosts = await getAllPosts(domain)
                 await sleep(5000)
                 return allPosts
 
@@ -76,12 +75,15 @@ const Mutation = new GraphQLObjectType({
                 userName: { type: GraphQLString },
                 password: { type: GraphQLString },
             },
-            resolve(parent, args, context) {
-                const { userName, password } = args
+            async resolve(parent, args, context) {
+                const { userName } = args
+
                 const domain = getDomain(context)
-                const token = createJWT({ userName, password }, domain)
-                // console.log("token is ", token)
-                return { id: 1234, userName, token }
+                const user_from_db = await getUser({ username: userName }, domain)
+                console.log("=================User data from data base=====================", user_from_db.dataValues)
+                const { id, username, password } = user_from_db.dataValues
+                const token = createJWT({ username, password, domain }, domain)
+                return { id, userName: username, token }
             }
         },
         createNewPost: {
@@ -109,6 +111,19 @@ const Mutation = new GraphQLObjectType({
             resolve(parent, args, context) {
                 const domain = getDomain(context)
                 return updatePost(args, domain)
+            },
+        },
+        createNewUser: {
+            type: UserType,
+            args: {
+                username: { type: GraphQLString },
+                password: { type: GraphQLString },
+
+
+            },
+            resolve(parent, args, context) {
+                const domain = getDomain(context)
+                return createNewUser(args, domain)
             },
         },
     },
